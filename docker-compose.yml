@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: seatdb
+      MYSQL_USER: seatuser
+      MYSQL_PASSWORD: seatpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports: ["3306:3306"]
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -prootpass --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes: ["mysql_data:/var/lib/mysql"]
+  app:
+    build: .
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: seatdb
+      DB_USER: seatuser
+      DB_PASSWORD: seatpass
+      ADMIN_TOKEN: admin-secret
+      PER_USER_LIMIT: 4
+    ports: ["8080:8080"]
+volumes:
+  mysql_data:

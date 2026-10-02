@@ -1,0 +1,17 @@
+# Maven
+target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Environment and secrets
+.env
+.env.*
+*.env
+
+# OS files
+.DS_Store
+Thumbs.db
